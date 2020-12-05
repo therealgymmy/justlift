@@ -1,11 +1,11 @@
-import React, { useReducer } from 'react';
+import React from 'react';
 import { FlatList, View } from 'react-native';
 import TouchableScale from 'react-native-touchable-scale';
 import { Button, Card, Header, ListItem, Text, ThemeProvider } from 'react-native-elements';
 import { AntDesign } from '@expo/vector-icons';
 
-export default function MakeStartScreen() {
-  return MakeScreen(StartScreen());
+export default function MakeStartScreen(setDisplay, workoutState, updateWorkouts, actionCreators) {
+  return MakeScreen(StartScreen(setDisplay, workoutState, updateWorkouts, actionCreators));
 }
 
 const MakeScreen = (screen) => {
@@ -16,15 +16,16 @@ const MakeScreen = (screen) => {
   );
 }
 
-const StartScreen = () => {
-  const [state, dispatch] = useReducer(reducer, initialState);
-
+const StartScreen = (setDisplay, workoutState, updateWorkouts, actionCreators) => {
   return (
     <View style={{flex: 1}}>
       <Header
         centerComponent={<Text style={{fontSize: 24, color:'white'}}>Just Lift</Text>}
         rightComponent={renderSettingsButton(
-          () => dispatch(actionCreators.add('New Routine'))
+          () => {
+            updateWorkouts(actionCreators.add('New Routine'));
+            setDisplay('add-new-routine');
+          }
         )}
       />
       <Card>
@@ -37,7 +38,7 @@ const StartScreen = () => {
       <Card containerStyle={{flex: 0.9}} wrapperStyle={{flex: 1}}>
         <Card.Title>Saved Routines</Card.Title>
         <Card.Divider/>
-        {renderWorkouts(state.items)}
+        {renderWorkouts(workoutState.items)}
       </Card>
     </View>
   );
@@ -77,52 +78,3 @@ const renderWorkouts = (workouts) => {
   );
 }
 
-const randomId = () => Math.random().toString();
-
-const createNewExercise = (title) => ({
-  id: randomId(),
-  title: title,
-  lastExerciseDate: '11/01/2020',
-});
-
-const types = {
-  ADD: 'ADD',
-  REMOVE: 'REMOVE',
-}
-
-const actionCreators = {
-  add: (title) => ({ type: types.ADD, payload: createNewExercise(title) }),
-  remove: (id) => ({ type: types.REMOVE, payload: id }),
-}
-
-const initialState = {
-  items: [
-    createNewExercise('Routine 1'),
-    createNewExercise('Routine 2'),
-    createNewExercise('Routine 3'),
-    createNewExercise('Routine 4'),
-    createNewExercise('Routine 5'),
-    createNewExercise('Routine 6'),
-    createNewExercise('Routine 7'),
-    createNewExercise('Routine 8'),
-    createNewExercise('Routine 9'),
-    createNewExercise('Routine 10'),
-    createNewExercise('Routine 11'),
-    createNewExercise('Routine 12'),
-    createNewExercise('Routine 13'),
-    createNewExercise('Routine 14'),
-    createNewExercise('Routine 15'),
-  ],
-}
-
-const reducer = (state, action) => {
-  switch (action.type) {
-    case types.ADD:
-      return { ...state, items: [...state.items, action.payload] }
-    case types.REMOVE:
-      return {
-        ...state,
-        items: state.items.filter((item) => item.id !== action.payload),
-      }
-  }
-}
