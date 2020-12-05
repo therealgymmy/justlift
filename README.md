@@ -1,2 +1,2 @@
 # justlift
-toy weightlifting app to learn react native
+toy weightlifting app for learning react native
