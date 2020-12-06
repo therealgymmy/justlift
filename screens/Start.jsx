@@ -1,29 +1,16 @@
 import React from 'react';
 import { FlatList, View } from 'react-native';
 import TouchableScale from 'react-native-touchable-scale';
-import { Button, Card, Header, ListItem, Text, ThemeProvider } from 'react-native-elements';
+import { Button, Card, Header, ListItem, Text } from 'react-native-elements';
 import { AntDesign } from '@expo/vector-icons';
 
-export default function MakeStartScreen(setDisplay, workoutState, updateWorkouts, actionCreators) {
-  return MakeScreen(StartScreen(setDisplay, workoutState, updateWorkouts, actionCreators));
-}
-
-const MakeScreen = (screen) => {
-  return (
-    <ThemeProvider>
-      {screen}
-    </ThemeProvider>
-  );
-}
-
-const StartScreen = (setDisplay, workoutState, updateWorkouts, actionCreators) => {
+export default function Start(setDisplay, workoutState) {
   return (
     <View style={{flex: 1}}>
       <Header
         centerComponent={<Text style={{fontSize: 24, color:'white'}}>Just Lift</Text>}
         rightComponent={renderSettingsButton(
           () => {
-            updateWorkouts(actionCreators.add('New Routine'));
             setDisplay('add-new-routine');
           }
         )}
@@ -42,7 +29,7 @@ const StartScreen = (setDisplay, workoutState, updateWorkouts, actionCreators) =
       </Card>
     </View>
   );
-};
+}
 
 const renderSettingsButton = (onPressButton) => {
   return (
